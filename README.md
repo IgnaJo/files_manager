@@ -24,3 +24,5 @@ La aplicación es una herramienta de escritorio desarrollada con Tkinter que per
 ## Packaging
 - Instalar Auto Py to Exe: `pip install auto-py-to-exe`
 - Ejecutar: `auto-py-to-exe`
+- pyinstaller --noconfirm --onedir --windowed --icon "assets/images/logo.ico" --add-data "C:\Users\Jose Ignacio\Desktop\WorkSpace\files_manager\files_manager\venv\Lib\site-packages\tkinterdnd2;tkinterdnd2/" --add-data "C:\Users\Jose Ignacio\Desktop\WorkSpace\files_manager\files_manager\venv\Lib\site-packages\customtkinter;customtkinter/" "C:\Users\Jose Ignacio\Desktop\WorkSpace\files_manager\files_manager\drag_app.py"
+
