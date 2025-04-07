@@ -14,7 +14,7 @@ class VentanaPrincipal(TkinterDnD.Tk):
         set_appearance_mode("Dark")
         set_default_color_theme("blue")
         self.title("Gestor de Archivos")
-        w, h = 800, 320
+        w, h = 800, 400
         self.resizable(0, 0)
         self.iconbitmap('assets/images/logo.ico')
         assets.config.config.center_windows(self, w, h)
@@ -51,11 +51,40 @@ class VentanaPrincipal(TkinterDnD.Tk):
         self.progress_bar = CTkProgressBar(self.form_frame, width=400, mode='determinate')
         self.progress_bar.grid(row=5, column=0, columnspan=2, pady=10)
 
-        self.button_guardar = CTkButton(self.form_frame, text="Mover Archivos", font=(font_label, 16), text_color=OBSCURE, fg_color=LIGHT_GREY, hover_color=DEBUT, anchor="center", command=self.iniciar_movimiento) # Llama a un método
-        self.button_guardar.grid(row=4, column=0, padx=5, pady=10, sticky="ew")
+        self.control_frame = CTkFrame(self.form_frame, fg_color="transparent")
+        self.control_frame.grid(row=6, column=0, columnspan=2, pady=10)
 
-        self.button_clean_entry = CTkButton(self.form_frame, text="Limpiar Campos", font=(font_label, 16), text_color=OBSCURE, fg_color=LIGHT_GREY, hover_color=RED, anchor="center", command=self.clean_entries)
-        self.button_clean_entry.grid(row=4, column=1, padx=5, pady=10, sticky="ew")
+        self.copy_var = BooleanVar(value=False)
+        self.copy_checkbox = CTkCheckBox(
+            self.control_frame,
+            text="Copiar archivos en lugar de moverlos",
+            variable=self.copy_var,
+            width=200,
+            height=30
+        )
+        self.copy_checkbox.pack(side="left", padx=20)
+
+        self.button_guardar = CTkButton(
+            self.control_frame,
+            text="Mover Archivos",
+            command=self.iniciar_movimiento,
+            width=120,
+            height=30
+        )
+        self.button_guardar.pack(side="left", padx=20)
+
+        self.button_clean_entry = CTkButton(
+            self.control_frame,
+            text="Limpiar Campos",
+            font=(font_label, 16),
+            text_color=OBSCURE,
+            fg_color=LIGHT_GREY,
+            hover_color=RED,
+            width=120,
+            height=30,
+            command=self.clean_entries
+        )
+        self.button_clean_entry.pack(side="left", padx=20)
 
         self.form_frame.grid_columnconfigure(0, weight=1, minsize=100)
         self.form_frame.grid_columnconfigure(1, weight=1, minsize=100)
@@ -70,7 +99,6 @@ class VentanaPrincipal(TkinterDnD.Tk):
 
     def clean_entries(self):
         self.entry1.delete(0, "end")
-        self.entry2.delete(0, "end")
         self.entry3.delete(0, "end")
         self.progress_var.set('')
         self.progress_bar.set(0)
@@ -86,14 +114,15 @@ class VentanaPrincipal(TkinterDnD.Tk):
         carpeta_referencia = self.entry1.get()
         carpeta_archivos = self.entry2.get()
         carpeta_destino = self.entry3.get()
+        is_copy = self.copy_var.get()  # Get checkbox state
 
         # Validación básica del lado del cliente
         if not (carpeta_referencia and carpeta_archivos and carpeta_destino):
             MessageBox.showerror(title='Error', message='Por favor, complete todos los campos.')
             return
 
-        # Llama a la función de lógica desde file_operations con la barra de progreso
-        guardar_datos(carpeta_referencia, carpeta_archivos, carpeta_destino, self.progress_bar)
+        # Llama a la función de lógica desde file_operations
+        guardar_datos(carpeta_referencia, carpeta_archivos, carpeta_destino, self.progress_bar, is_copy)
         self.clean_entries() # Limpia los campos después de la operación
 
 if __name__ == "__main__":

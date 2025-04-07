@@ -3,7 +3,7 @@ import os
 import shutil
 from tkinter import messagebox as MessageBox
 
-def guardar_datos(carpeta_referencia, carpeta_archivos, carpeta_destino, progress_bar=None):
+def guardar_datos(carpeta_referencia, carpeta_archivos, carpeta_destino, progress_bar=None, is_copy=False):
     # Verificar si las carpetas son válidas
     if not (os.path.isdir(carpeta_referencia) and os.path.isdir(carpeta_archivos) and os.path.isdir(carpeta_destino)):
         MessageBox.showerror(title='Error', message='Ingrese rutas válidas')
@@ -27,18 +27,21 @@ def guardar_datos(carpeta_referencia, carpeta_archivos, carpeta_destino, progres
     if progress_bar:
         progress_bar.set(0)
 
-    # Mover los archivos encontrados a la carpeta de destino
+    # Copiar o mover los archivos encontrados a la carpeta de destino
     moved_count = 0
+    operation_func = shutil.copy2 if is_copy else shutil.move
+    operation_type = "copiado" if is_copy else "movido"
+
     for i, archivo in enumerate(archivos_a_mover, 1):
         origen = os.path.join(carpeta_archivos, archivo)
         destino = os.path.join(carpeta_destino, archivo)
         try:
-            shutil.move(origen, destino)
+            operation_func(origen, destino)
             moved_count += 1
             # Actualizar la barra de progreso si está disponible
             if progress_bar:
                 progress_bar.set(i / num_archivos_a_mover)
         except Exception as e:
-            print(f"No se pudo mover el archivo {archivo}: {e}")
+            print(f"No se pudo {operation_type} el archivo {archivo}: {e}")
 
-    MessageBox.showinfo(title='Operación Completada', message=f'Se han trasladado {moved_count} archivos.')
+    MessageBox.showinfo(title='Operación Completada', message=f'Se han {operation_type} {moved_count} archivos.')
