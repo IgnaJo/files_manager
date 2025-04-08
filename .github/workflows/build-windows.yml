@@ -12,40 +12,30 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.12'
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
-        
-    - name: Download and setup tkdnd
-      run: |
-        $tkdndVersion = "2.9.3"
-        $tkdndUrl = "https://github.com/petasis/tkdnd/releases/download/$tkdndVersion/tkdnd-$tkdndVersion.tar.gz"
-        Invoke-WebRequest -Uri $tkdndUrl -OutFile "tkdnd.tar.gz"
-        tar -xzf tkdnd.tar.gz
-        
-    - name: Build with PyInstaller
-      run: |
-        $env:TCL_LIBRARY = (python -c "import tcl; print(tcl.__path__[0])")
-        $env:TK_LIBRARY = (python -c "import tkinter; print(tkinter.__path__[0])")
-        pyinstaller --noconfirm --onefile --windowed --name "FilesManager" `
-          --add-data "src;src" `
-          --add-data "tkdnd2.9.3/lib/tkdnd2.9.3;tkdnd2.9.3" `
-          --hidden-import "tkinter" `
-          --hidden-import "customtkinter" `
-          --hidden-import "tkinterdnd2" `
-          src/main.py
-        
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: FilesManager-Windows
-        path: dist/FilesManager.exe
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller --noconfirm --onefile --windowed ^
+            --name "FilesManager" ^
+            --add-data "src;src" ^
+            --add-data "tkdnd2.9;tkdnd2.9" ^
+            src/main.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FilesManager-Windows
+          path: dist/FilesManager.exe
