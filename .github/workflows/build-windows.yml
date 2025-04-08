@@ -24,17 +24,25 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
+    - name: Get package paths
+      id: paths
+      shell: cmd
+      run: |
+        for /f "delims=" %%i in ('python -c "import tkinterdnd2; print(tkinterdnd2.__path__[0])"') do set PYTHONPATH_TKDND2=%%i
+        for /f "delims=" %%i in ('python -c "import customtkinter; print(customtkinter.__path__[0])"') do set PYTHONPATH_CTK=%%i
+        echo Paths set
+
     - name: Build with PyInstaller
       shell: cmd
       run: |
         pyinstaller --noconfirm --onedir --windowed ^
         --icon "assets/images/logo.ico" ^
-        --add-data "venv/Lib/site-packages/tkinterdnd2;tkinterdnd2/" ^
-        --add-data "venv/Lib/site-packages/customtkinter;customtkinter/" ^
+        --add-data "%PYTHONPATH_TKDND2%;tkinterdnd2" ^
+        --add-data "%PYTHONPATH_CTK%;customtkinter" ^
         src/main.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: files_manager-exe
-        path: ${{ env.TEMP }}\dist
+        path: dist/
