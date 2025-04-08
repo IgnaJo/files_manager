@@ -35,7 +35,7 @@ jobs:
     - name: Build with PyInstaller
       run: |
         pyinstaller --noconfirm --onedir --windowed `
-        --icon "assets/images/logo.ico" `
+        --icon "src/assets/images/logo.ico" `
         --add-data "$env:TKDND_PATH;tkinterdnd2" `
         --add-data "$env:CTK_PATH;customtkinter" `
         src/main.py
