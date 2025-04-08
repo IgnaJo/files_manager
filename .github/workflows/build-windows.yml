@@ -1,45 +1,47 @@
 name: Build Windows Executable
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
 
+    env:
+      TKDND_PATH: ${{ runner.temp }}\\venv\\Lib\\site-packages\\tkinterdnd2
+      CTK_PATH: ${{ runner.temp }}\\venv\\Lib\\site-packages\\customtkinter
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: |
+          python -m venv venv
+          venv\Scripts\activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Locate tkinterdnd2 and customtkinter paths
-        id: paths
-        run: |
-          echo "TKDND_PATH=$(python -c "import tkinterdnd2, os; print(os.path.dirname(tkinterdnd2.__file__))")" >> $env:GITHUB_ENV
-          echo "CTK_PATH=$(python -c "import customtkinter, os; print(os.path.dirname(customtkinter.__file__))")" >> $env:GITHUB_ENV
-
       - name: Build executable with PyInstaller
         run: |
-          pyinstaller --noconfirm --onedir --windowed ^
-          --icon "assets/images/logo.ico" ^
-          --add-data "$env:TKDND_PATH;tkinterdnd2/" ^
-          --add-data "$env:CTK_PATH;customtkinter/" ^
-          drag_app.py
+          venv\Scripts\activate
+          pyinstaller `
+            --noconfirm `
+            --onedir `
+            --windowed `
+            --icon "assets/images/logo.ico" `
+            --add-data "$env:TKDND_PATH;tkinterdnd2/" `
+            --add-data "$env:CTK_PATH;customtkinter/" `
+            main.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Windows-executable
+          name: windows-executable
           path: dist/
