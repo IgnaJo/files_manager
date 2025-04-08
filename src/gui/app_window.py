@@ -8,6 +8,8 @@ from tkinter import messagebox as MessageBox
 import assets.config.config
 from assets.config.config import FONT_PATH, FONT_SIZE, OBSCURE, GREEN, LIGHT_GREY, ERAS_COLOR, RED, DEBUT, DARK_GREY
 from logic.file_operation import guardar_datos
+from tkinterdnd2 import TkinterDnD
+
 
 def get_tkdnd_path():
     if getattr(sys, 'frozen', False):
@@ -20,6 +22,7 @@ def get_tkdnd_path():
 
 class MainWindow(TkinterDnD.Tk):
     def __init__(self):
+        os.environ['TCLLIBPATH'] = os.path.abspath("tkdnd2.9")
         # Initialize tkdnd path for Windows
         tkdnd_path = get_tkdnd_path()
         if tkdnd_path:
