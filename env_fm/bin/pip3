@@ -1,4 +1,4 @@
-#!/Users/joseignacio/Desktop/Workspace/files_manager/env_fm/bin/python3.12
+#!/Users/joseignacio/Desktop/Workspace/files_manager/env_fm/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
