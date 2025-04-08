@@ -24,21 +24,20 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
 
-    - name: Get package paths
-      id: paths
-      shell: cmd
+    - name: Get module paths
+      id: module_paths
       run: |
-        for /f "delims=" %%i in ('python -c "import tkinterdnd2; print(tkinterdnd2.__path__[0])"') do set PYTHONPATH_TKDND2=%%i
-        for /f "delims=" %%i in ('python -c "import customtkinter; print(customtkinter.__path__[0])"') do set PYTHONPATH_CTK=%%i
-        echo Paths set
+        $tkdndPath = python -c "import tkinterdnd2; print(tkinterdnd2.__path__[0])"
+        $ctkPath = python -c "import customtkinter; print(customtkinter.__path__[0])"
+        echo "TKDND_PATH=$tkdndPath" >> $env:GITHUB_ENV
+        echo "CTK_PATH=$ctkPath" >> $env:GITHUB_ENV
 
     - name: Build with PyInstaller
-      shell: cmd
       run: |
-        pyinstaller --noconfirm --onedir --windowed ^
-        --icon "assets/images/logo.ico" ^
-        --add-data "%PYTHONPATH_TKDND2%;tkinterdnd2" ^
-        --add-data "%PYTHONPATH_CTK%;customtkinter" ^
+        pyinstaller --noconfirm --onedir --windowed `
+        --icon "assets/images/logo.ico" `
+        --add-data "$env:TKDND_PATH;tkinterdnd2" `
+        --add-data "$env:CTK_PATH;customtkinter" `
         src/main.py
 
     - name: Upload artifact
