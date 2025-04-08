@@ -1,4 +1,6 @@
 # src/gui/app_window.py
+import os
+import sys
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from customtkinter import *
 import tkinter.font as tkFont
@@ -6,17 +8,38 @@ from tkinter import messagebox as MessageBox
 import assets.config.config
 from assets.config.config import FONT_PATH, FONT_SIZE, OBSCURE, GREEN, LIGHT_GREY, ERAS_COLOR, RED, DEBUT, DARK_GREY
 from logic.file_operation import guardar_datos
-import os
+
+def get_tkdnd_path():
+    if getattr(sys, 'frozen', False):
+        # If the application is run as a bundle (pyinstaller)
+        base_path = sys._MEIPASS
+        tkdnd_path = os.path.join(base_path, 'tkdnd2.9.3')
+        if os.path.exists(tkdnd_path):
+            return tkdnd_path
+    return None
 
 class MainWindow(TkinterDnD.Tk):
     def __init__(self):
+        # Initialize tkdnd path for Windows
+        tkdnd_path = get_tkdnd_path()
+        if tkdnd_path:
+            os.environ['TKDND_LIBRARY'] = tkdnd_path
+
         super().__init__()
         set_appearance_mode("Dark")
         set_default_color_theme("blue")
         self.title("Gestor de Archivos")
         w, h = 800, 320
         self.resizable(0, 0)
-        self.iconbitmap('assets/images/logo.ico')
+        
+        # Handle icon path for both development and bundled versions
+        icon_path = 'assets/images/logo.ico'
+        if getattr(sys, 'frozen', False):
+            # Running in a bundle
+            icon_path = os.path.join(sys._MEIPASS, icon_path)
+        if os.path.exists(icon_path):
+            self.iconbitmap(icon_path)
+            
         assets.config.config.center_windows(self, w, h)
 
         self.form_frame = CTkFrame(self)
