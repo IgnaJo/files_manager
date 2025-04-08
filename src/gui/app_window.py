@@ -22,7 +22,7 @@ def get_tkdnd_path():
 
 class MainWindow(TkinterDnD.Tk):
     def __init__(self):
-        os.environ['TCLLIBPATH'] = os.path.abspath("tkdnd2.9")
+        os.environ['TCLLIBPATH'] = os.path.abspath("tkdnd2.8")
         # Initialize tkdnd path for Windows
         tkdnd_path = get_tkdnd_path()
         if tkdnd_path:
