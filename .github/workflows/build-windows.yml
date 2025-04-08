@@ -31,7 +31,7 @@ jobs:
         --icon "assets/images/logo.ico" ^
         --add-data "venv/Lib/site-packages/tkinterdnd2;tkinterdnd2/" ^
         --add-data "venv/Lib/site-packages/customtkinter;customtkinter/" ^
-        src/drag_app.py
+        src/main.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
