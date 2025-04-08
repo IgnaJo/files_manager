@@ -15,7 +15,7 @@ def get_tkdnd_path():
     if getattr(sys, 'frozen', False):
         # If the application is run as a bundle (pyinstaller)
         base_path = sys._MEIPASS
-        tkdnd_path = os.path.join(base_path, 'tkdnd2.9.3')
+        tkdnd_path = os.path.join(base_path, 'tkdnd2.8')
         if os.path.exists(tkdnd_path):
             return tkdnd_path
     return None
