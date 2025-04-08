@@ -30,7 +30,7 @@ jobs:
         pyinstaller --noconfirm --onefile --windowed --name "FilesManager" --add-data "src;src" src/main.py
         
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: FilesManager-Windows
         path: dist/FilesManager.exe
