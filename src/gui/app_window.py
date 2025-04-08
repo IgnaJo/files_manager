@@ -32,7 +32,7 @@ class MainWindow(TkinterDnD.Tk):
         set_appearance_mode("Dark")
         set_default_color_theme("blue")
         self.title("Gestor de Archivos")
-        w, h = 800, 320
+        w, h = 800, 380
         self.resizable(0, 0)
         
         # Handle icon path for both development and bundled versions
@@ -77,6 +77,25 @@ class MainWindow(TkinterDnD.Tk):
         self.progress_bar = CTkProgressBar(self.form_frame, width=400, mode='determinate')
         self.progress_bar.grid(row=5, column=0, columnspan=2, pady=10)
 
+        # Add checkbox for copy mode
+        self.copy_mode_var = BooleanVar(value=False)
+        self.copy_mode_checkbox = CTkCheckBox(
+            self.form_frame, 
+            text="Copiar archivos (en lugar de moverlos)", 
+            variable=self.copy_mode_var,
+            font=(font_label, 14),
+            width=600,  
+            height=30   
+        )
+        self.copy_mode_checkbox.grid(
+            row=6, 
+            column=0, 
+            columnspan=2, 
+            pady=(15, 5),  
+            sticky="w", 
+            padx=20  
+        )
+
         self.button_guardar = CTkButton(self.form_frame, text="Mover Archivos", font=(font_label, 16), text_color=OBSCURE, fg_color=LIGHT_GREY, hover_color=DEBUT, anchor="center", command=self.iniciar_movimiento) # Llama a un método
         self.button_guardar.grid(row=4, column=0, padx=5, pady=10, sticky="ew")
 
@@ -119,7 +138,12 @@ class MainWindow(TkinterDnD.Tk):
             return
 
         # Llama a la función de lógica desde file_operations
-        guardar_datos(carpeta_referencia, carpeta_archivos, carpeta_destino)
+        guardar_datos(
+            carpeta_referencia, 
+            carpeta_archivos, 
+            carpeta_destino,
+            copy_mode=self.copy_mode_var.get()
+        )
         self.clean_entries() # Limpia los campos después de la operación
 
 if __name__ == "__main__":
