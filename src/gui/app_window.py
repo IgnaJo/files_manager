@@ -44,7 +44,7 @@ class MainWindow(TkinterDnD.Tk):
         self.form_frame = CTkFrame(self)
         self.form_frame.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.9, relheight=0.8)
 
-        self.label_instrucciones = CTkLabel(self.form_frame, text="Traslada tus Archivos :", font=("Segoe UI BLACK",22))
+        self.label_instrucciones = CTkLabel(self.form_frame, text="Gestionar Archivos", font=("Segoe UI BLACK BOLD",22))
         self.label_instrucciones.grid(row=0, column=0, columnspan=2, pady=10)
 
         font_label = "Segoe UI Semibold"
@@ -52,7 +52,7 @@ class MainWindow(TkinterDnD.Tk):
         self.label_folder_reference = CTkLabel(self.form_frame, text="Carpeta de referencia :", font=(font_label, 16), padx=5)
         self.label_folder_reference.grid(row=1, column=0, padx=5, sticky="w")
 
-        self.label_folder1 = CTkLabel(self.form_frame, text="Carpeta con archivos a mover", font=(font_label, 16), padx=5)
+        self.label_folder1 = CTkLabel(self.form_frame, text="Carpeta con archivos a mover :", font=(font_label, 16), padx=5)
         self.label_folder1.grid(row=2, column=0, padx=5, sticky="w")
 
         self.label_folder2 = CTkLabel(self.form_frame, text="Carpeta de destino :", font=(font_label, 16), padx=5)
