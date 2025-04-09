@@ -2,13 +2,11 @@
 import os
 import sys
 from tkinterdnd2 import DND_FILES, TkinterDnD
-from customtkinter import *
-import tkinter.font as tkFont
+from customtkinter import CTkFrame,CTkEntry,CTkLabel,CTkButton,CTkCheckBox, set_appearance_mode, set_default_color_theme,StringVar,CTkProgressBar,BooleanVar
 from tkinter import messagebox as MessageBox
 import assets.config.config
-from assets.config.config import FONT_PATH, FONT_SIZE, OBSCURE, GREEN, LIGHT_GREY, ERAS_COLOR, RED, DEBUT, DARK_GREY
+from assets.config.config import   OBSCURE, LIGHT_GREY, RED, DEBUT
 from logic.file_operation import guardar_datos
-from tkinterdnd2 import TkinterDnD
 
 
 def get_tkdnd_path():
@@ -35,10 +33,8 @@ class MainWindow(TkinterDnD.Tk):
         w, h = 800, 380
         self.resizable(0, 0)
         
-        # Handle icon path for both development and bundled versions
         icon_path = 'assets/images/logo.ico'
         if getattr(sys, 'frozen', False):
-            # Running in a bundle
             icon_path = os.path.join(sys._MEIPASS, icon_path)
         if os.path.exists(icon_path):
             self.iconbitmap(icon_path)
@@ -83,6 +79,8 @@ class MainWindow(TkinterDnD.Tk):
             self.form_frame, 
             text="Copiar archivos (en lugar de moverlos)", 
             variable=self.copy_mode_var,
+            command=self.change_text_btn,
+
             font=(font_label, 14),
             width=600,  
             height=30   
@@ -95,8 +93,11 @@ class MainWindow(TkinterDnD.Tk):
             sticky="w", 
             padx=20  
         )
-
-        self.button_guardar = CTkButton(self.form_frame, text="Mover Archivos", font=(font_label, 16), text_color=OBSCURE, fg_color=LIGHT_GREY, hover_color=DEBUT, anchor="center", command=self.iniciar_movimiento) # Llama a un método
+        
+        
+        
+        
+        self.button_guardar = CTkButton(self.form_frame, text='Mover Archivos', font=(font_label, 16), text_color=OBSCURE, fg_color=LIGHT_GREY, hover_color=DEBUT, anchor="center", command=self.iniciar_movimiento) # Llama a un método
         self.button_guardar.grid(row=4, column=0, padx=5, pady=10, sticky="ew")
 
         self.button_clean_entry = CTkButton(self.form_frame, text="Limpiar Campos", font=(font_label, 16), text_color=OBSCURE, fg_color=LIGHT_GREY, hover_color=RED, anchor="center", command=self.clean_entries)
@@ -113,6 +114,15 @@ class MainWindow(TkinterDnD.Tk):
         self.entry3.drop_target_register(DND_FILES)
         self.entry3.dnd_bind('<<Drop>>', lambda event: self.drop(event, self.entry3))
 
+    
+    
+    def change_text_btn(self):
+        if self.copy_mode_checkbox.get():
+            checkbox_text="Copiar Archivos"
+        else:
+            checkbox_text ="Mover Archivos"
+        self.button_guardar.configure(text=checkbox_text)
+    
     def clean_entries(self):
         self.entry1.delete(0, "end")
         self.entry2.delete(0, "end")
@@ -132,7 +142,6 @@ class MainWindow(TkinterDnD.Tk):
         carpeta_archivos = self.entry2.get()
         carpeta_destino = self.entry3.get()
 
-        # Validación básica del lado del cliente (opcional, pero buena práctica)
         if not (carpeta_referencia and carpeta_archivos and carpeta_destino):
             MessageBox.showerror(title='Error', message='Por favor, complete todos los campos.')
             return

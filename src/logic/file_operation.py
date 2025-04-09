@@ -2,7 +2,6 @@
 import os
 import shutil
 from tkinter import messagebox as MessageBox
-from customtkinter import CTkProgressBar
 
 def guardar_datos(carpeta_referencia, carpeta_archivos, carpeta_destino, copy_mode=False):
     # Verificar si las carpetas son válidas
